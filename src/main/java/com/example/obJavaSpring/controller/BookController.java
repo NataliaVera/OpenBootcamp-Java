@@ -2,12 +2,15 @@ package com.example.obJavaSpring.controller;
 
 import com.example.obJavaSpring.entity.Book;
 import com.example.obJavaSpring.repository.BookRepository;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +34,8 @@ public class BookController {
 
     //Buscar un solo libro segun su id
     @GetMapping("/api/findOneById/{id}")
-    public ResponseEntity<Book> findOneById(@PathVariable Long id){
+    @ApiOperation("Buscar un libro por clave primaria Id Long")
+    public ResponseEntity<Book> findOneById(@ApiParam("Clave primarioa tipo Long") @PathVariable Long id){
         Optional<Book> bookOpt = repository.findById(id);
 
         //Programación Funcional
@@ -45,6 +49,7 @@ public class BookController {
     }
 
     //Crear un nuevo libro
+
     @PostMapping("/api/createBook")
     public ResponseEntity<Book> createBook(@RequestBody Book newBook, @RequestHeader HttpHeaders headers){
         System.out.println(headers.get("User-Agent"));
@@ -77,6 +82,7 @@ public class BookController {
         return ResponseEntity.ok(result);
     }
     // borrar un libro
+    @ApiIgnore
     @DeleteMapping("/api/delete/{id}")
     public ResponseEntity<Book> delecte(@PathVariable Long id){
         if(!repository.existsById(id)){
@@ -89,6 +95,7 @@ public class BookController {
     }
 
     //borrar todos
+    @ApiIgnore //Ignorar este metodo para que no aparezca en la documentacion de la API swagger
     @DeleteMapping("/api/deleteAll")
     public ResponseEntity<Book> deleteAll(){
         log.info("REST Request for delete all books");
